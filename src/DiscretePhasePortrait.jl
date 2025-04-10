@@ -72,8 +72,8 @@ function phaseportrait(F, G, limits; n=1, directions=[0,π/2], fixpt=nothing, Ja
 		x2 = range(detlimits[1,1], detlimits[1,2], length=resolution)
 		y2 = range(detlimits[2,1], detlimits[2,2], length=resolution)'
 	else
-		x2 = x
-		y2 = y
+		x2 = nothing
+		y2 = nothing
 	end
 
     # Define iterated functions.
@@ -105,7 +105,7 @@ function phaseportrait(F, G, limits; n=1, directions=[0,π/2], fixpt=nothing, Ja
 
     # Initialize the plot for isoclines, preimages and θ angled grid lines
 	p_1 = plot(xlabel="x", ylabel="y", xlims=limits[1,:], ylims=limits[2,:], grid=false, 
-			   size = plotsize, legend = false, clf=true, framestyle=:box, widen=true)
+			   size=plotsize, legend=false, clf=true, framestyle=:box, widen=true)
 
     #This is the region where all the points in the plane maps
 	if showrange
@@ -306,22 +306,20 @@ end
 
 function iso_pre!(p_1,FG, direc, x, y, col)
 	# plot the isoclines and their preimages for each θ in direc.
+    (val_F,val_G) = FG(x,y)
+    (val_FF,val_GG) = FG(val_F,val_G)
     for (i,θ) in enumerate(direc)
-        (val_F,val_G) = FG(x,y)
-        C_1 = (val_F .- x) .* sin(θ) .- (val_G .- y) .* cos(θ) 
-        
-        (val_FF,val_GG) = FG(val_F,val_G)
-        C_2 = (val_FF .- val_F) .* sin(θ) - (val_GG .- val_G) .* cos(θ)
-        
-        # plot C_1 (For interior isoclines)
-        iso = Contour.contour(x, y', C_1, 0.0)
+        # plot isoclines
+        C = (val_F .- x) .* sin(θ) .- (val_G .- y) .* cos(θ) 
+        iso = Contour.contour(x, y', C, 0.0)
         for line in lines(iso)
             xs, ys = coordinates(line) 
             plot!(p_1, xs, ys, linestyle=:solid, lw=1,color=col[i])
         end 
 
-        #plot C_2 (preimages)    
-        pre = Contour.contour(x, y', C_2, 0.0)
+        #plot preimages of isoclines
+        C = (val_FF .- val_F) .* sin(θ) - (val_GG .- val_G) .* cos(θ)
+        pre = Contour.contour(x, y', C, 0.0)
         for line in lines(pre)
             xs, ys = coordinates(line)
             plot!(p_1, xs, ys, linestyle=:dash, lw=1,color=col[i])
@@ -360,7 +358,7 @@ end
 function forwardmap!(p_1,FG,x,y) 
     (val_F,val_G) = FG(x,y)
     scatter!(p_1,val_F[:], val_G[:], color = :gray, marker = :circle, 
-			    markersize = 1, alpha=0.008, label = "")
+			    markersize = 1, alpha=0.008)
 end
 
 function detplotter!(p_1,x,y,FG,FG_Jac,col,x2,y2)
@@ -374,18 +372,20 @@ function detplotter!(p_1,x,y,FG,FG_Jac,col,x2,y2)
     for line in lines(det_zero)
 		 #Plot the determinant of the Jacobian =0 contour
 		 xs, ys = coordinates(line)
-		 plot!(p_1,xs, ys, linestyle=:dash, label="det(J)=0", lw=1, color=col)
+		 plot!(p_1,xs, ys, linestyle=:dash, lw=1, color=col)
     end    
-    det_J = Matrix{Float64}(undef,length(x2),length(y2))
-    for j in 1:length(y2), i in 1:length(x2)
-		det_J[i,j] = det(FG_Jac(x2[i],y2[j]))
-    end
-    det_zero = Contour.contour(x2, y2', det_J, 0)
+	if !isnothing(x2)
+		det_J = Matrix{Float64}(undef,length(x2),length(y2))
+		for j in 1:length(y2), i in 1:length(x2)
+			det_J[i,j] = det(FG_Jac(x2[i],y2[j]))
+		end
+		det_zero = Contour.contour(x2, y2', det_J, 0)
+	end
     for line in lines(det_zero)
 		xs, ys = coordinates(line)
 		#Plot the image of the determinat of the Jacobian =0 contour
 		(val_F, val_G) = FG(xs, ys)
-		plot!(p_1,val_F, val_G, linestyle=:solid, label="Image_det(J)=0", lw=1, color=col)
+		plot!(p_1,val_F, val_G, linestyle=:solid, lw=1, color=col)
     end
 end
 
@@ -463,7 +463,7 @@ function legendplot(limits,X_max,Y_max,direc,FG,col)
 	
     # set up the plot
     p_2 = plot(xlims=(-δx, δx), ylims=(-δy, δy), framestyle=:none, axes=false, 
-			   grid=false, legend = false)
+			   grid=false, legend=false)
     # lines of the cross which make θ angle with +x axis
     legendgrid!(p_2,direc, δx, col)
 
@@ -483,7 +483,7 @@ function legendgrid!(p_2,direc, x_1, col)
 	# Draw the grid lines in the legend plot
     for (i,θ) in enumerate(direc)
         y_1 = x_1 * tan(θ)
-        plot!(p_2,[-x_1, x_1], [-y_1, y_1], color=col[i], label="", legend=false, alpha=0.2)
+        plot!(p_2,[-x_1, x_1], [-y_1, y_1], color=col[i], alpha=0.2)
     end
 end
         
