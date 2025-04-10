@@ -345,9 +345,7 @@ function iso_pre_edge!(p_1, z, C_edge, LR_edge, val, linestyle, col)
 		elseif start > 0 && length(C_edge) == i
 			stop = i
 		end
-		
 		if stop >start
-			use =true
 			if LR_edge
 				plot!(p_1,[val,val],[z[start],z[stop]],linestyle=linestyle, lw=1,color=col)
 			else 
@@ -362,7 +360,7 @@ end
 function forwardmap!(p_1,FG,x,y) 
     (val_F,val_G) = FG(x,y)
     scatter!(p_1,val_F[:], val_G[:], color = :gray, marker = :circle, 
-			    markersize = 1, alpha=0.01, label = "")
+			    markersize = 1, alpha=0.008, label = "")
 end
 
 function detplotter!(p_1,x,y,FG,FG_Jac,col,x2,y2)
