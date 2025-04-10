@@ -8,7 +8,7 @@ Plot a phase portrait for a discrete 2D system.
 A phase portrait of the discrete-time system
 
 ```math
-	x_{t+1} =  F(x_t, y_t),     y_{t+1} = G(x_t, y_t)
+	x_{t+1} =  F(x_t, y_t),   \quad  y_{t+1} = G(x_t, y_t)
 ```
 
 is drawn showing isoclines at particular directions and their preimages for the rectangular 
