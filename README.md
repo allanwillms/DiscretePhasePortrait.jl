@@ -20,14 +20,15 @@ to indicate which regions map to others and the direction of motion in each regi
   - `fixpt`: Approximation `(x0,y0)` of a fixed point of interest.
   - `Jac`: Function of `x` and `y` returning the Jacobian matrix of the system at a point `(x,y)`.
   - `directions=[0,π/2]`: Directions of the isoclines to use if `fixpt` or `Jac` are not given.
-    !!! info
-        If both `fixpt` and `Jac` are specified, the actual fixed point is determined using
-        Newton's method and `Jac` starting from the input `fixpt`, then the eigenvalues and
-        eigenvectors of the Jacobian at the actual fixed point are calculated and the
-        directions of the isoclines are set to the eigenvector directions.  The return
-        value is `(actualfixedpoint,eigenvalues,eigenvectors,evdirections)`.  If either
-        `fixpt` or `Jac` are *not* specified then the directions of the isoclines are
-        determined by the values in `directions`, and the return value is `nothing`.
+
+> [!NOTE]
+> If both `fixpt` and `Jac` are specified, the actual fixed point is determined using
+> Newton's method and `Jac` starting from the input `fixpt`, then the eigenvalues and
+> eigenvectors of the Jacobian at the actual fixed point are calculated and the
+> directions of the isoclines are set to the eigenvector directions.  The return
+> value is `(actualfixedpoint,eigenvalues,eigenvectors,evdirections)`.  If either
+> `fixpt` or `Jac` are *not* specified then the directions of the isoclines are
+> determined by the values in `directions`, and the return value is `nothing`.
 
   - `n::Int=1`: Number of iterations of the function f=[F,G] applied.
   - `labelpoints`: User defined points at which to apply region labeling.  
@@ -40,9 +41,10 @@ to indicate which regions map to others and the direction of motion in each regi
     det(Jac)=0 curve.
     The points within `detlimits` satisfying det(Jac)=0 are computed and the image of all such
     points are plotted if they lie within `limits`. 
-    !!! tip 
-        Often, to see more of the image curve it is 
-        necessary to make `detlimits` a larger rectangle than `limits`.
+
+> [!TIP]
+> Often, to see more of the image curve it is 
+> necessary to make `detlimits` a larger rectangle than `limits`.
 
   - `showrange::Bool=true`: Gray shade the image of all points within `limits`.
   - `resolution::Int=500`: Grid resolution.
