@@ -431,13 +431,13 @@ function label(FG, direc, points; iso)
                 dot_product[i] = (val_FF .- val_F) .* (-sin(θ)) + (val_GG .- val_G) .* cos(θ)
             end
         end
-        if dot_product[1] >= 0 && dot_product[2] >= 0
+        if dot_product[1] >= 0 && dot_product[2] <= 0
             labels[j] = "1"
-        elseif dot_product[1] >= 0 && dot_product[2] < 0
+        elseif dot_product[1] >= 0 && dot_product[2] > 0
             labels[j] = "2"
-        elseif dot_product[1] < 0 && dot_product[2] < 0
+        elseif dot_product[1] < 0 && dot_product[2] > 0
             labels[j] = "3"
-        else  # dot_product[1] < 0 && dot_product[2] >= 0
+        else  # dot_product[1] < 0 && dot_product[2] <= 0
             labels[j] = "4"
         end
         
