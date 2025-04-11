@@ -1,7 +1,7 @@
 name = "DiscretePhasePortrait"
 uuid = "8a3aab21-0cf5-4b1b-8a85-10b4e6308993"
 authors = ["Allan R. Willms <awillms@uoguelph.ca> and HSI Wijerathna"]
-version = "1.0.0"
+version = "1.0.1"
 
 [deps]
 Contour = "d38c429a-6771-53c6-b99e-75d170b6e991"
